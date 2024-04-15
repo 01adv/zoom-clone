@@ -2,12 +2,13 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import HomeCard from "./HomeCard";
-import MeetingModel from "./MeetingModel";
+import MeetingModal from "./MeetingModal";
 import { useUser } from "@clerk/nextjs";
 import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "./ui/textarea";
 import ReactDatePicker from 'react-datepicker'
+import { Input } from "./ui/input";
 
 const MeetingTypeList = () => {
   const router = useRouter();
@@ -102,7 +103,7 @@ const MeetingTypeList = () => {
       />
 
       {!callDetails ? (
-        <MeetingModel
+        <MeetingModal
           isOpen={meetingState === "isScheduleMeeting"}
           onClose={() => setMeetingState(undefined)}
           title="Create Meeting"
@@ -132,9 +133,9 @@ const MeetingTypeList = () => {
             className="w-full rounded bg-dark-3 p-2 focus:outline-none"
             />
           </div>
-        </MeetingModel>
+        </MeetingModal>
       ) : (
-        <MeetingModel
+        <MeetingModal
           isOpen={meetingState === "isScheduleMeeting"}
           onClose={() => setMeetingState(undefined)}
           title="Meeting Created"
@@ -148,7 +149,7 @@ const MeetingTypeList = () => {
           buttonText="Copy Meeting link"
         />
       )}
-      <MeetingModel
+      <MeetingModal
         isOpen={meetingState === "isInstantMeeting"}
         onClose={() => setMeetingState(undefined)}
         title="Start an instant meeting"
@@ -156,6 +157,15 @@ const MeetingTypeList = () => {
         buttonText="Start Meeting"
         handleClick={createMeeting}
       />
+      <MeetingModal
+        isOpen={meetingState === "isJoiningMeeting"}
+        onClose={() => setMeetingState(undefined)}
+        title="Type the link here"
+        className="text-center"
+        buttonText="Join Meeting"
+        handleClick={() => router.push(values.link)}
+      ><Input placeholder="Meeting Link" className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+      onChange={(e) => setValues({...values, link:e.target.value})}/></MeetingModal>
     </section>
   );
 };
